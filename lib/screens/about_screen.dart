@@ -11,6 +11,10 @@ import '../widgets/furigana.dart';
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
+  /// 스토어에 등록한 주소와 같아야 한다. 패키지를 늘리지 않으려고 링크 대신 글자로 보여 준다.
+  static const String _privacyUrl =
+      'https://songmyungsik.github.io/japanese-verbs-web/privacy.html';
+
   /// 활용형 예시에 쓰는 동사. 예시는 규칙 엔진이 직접 만들어서 항상 실제 활용과 같다.
   static const Verb _sample = Verb(
     id: 0,
@@ -232,6 +236,23 @@ class AboutScreen extends StatelessWidget {
                   '1단처럼 보이지만 5단인 동사(帰る, 入る, 走る 등)는 '
                   '메모로 표시해 두었습니다.',
                 ),
+              ],
+            ),
+          ),
+
+          const _Section(
+            title: '개인정보 처리방침',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _Bullet('이 앱은 개인정보를 수집하지 않고, 외부로 보내지 않습니다.'),
+                _Bullet(
+                  '학습 기록·즐겨찾기·퀴즈 설정은 이 기기 안에만 저장되며, '
+                  '앱이나 브라우저 데이터를 지우면 함께 삭제됩니다.',
+                ),
+                SizedBox(height: 4),
+                Text('전문 보기:'),
+                SelectableText(_privacyUrl),
               ],
             ),
           ),
