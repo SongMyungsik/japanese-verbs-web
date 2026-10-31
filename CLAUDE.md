@@ -75,6 +75,10 @@ web/             웹 진입점. sqlite3.wasm·sqflite_sw.js는 `dart run sqflite
 `python tool/subset_font.py <원본 NotoSansJP[wght].ttf>` (원본: github.com/google/fonts/ofl/notosansjp).
 없는 글자는 기기 글꼴로 대신 그려질 뿐 깨지지는 않는다.
 
+### 앱 아이콘
+`node tool/make_icon.js .`로 Android·웹·Windows·스토어용 파일을 만든다(`npm i puppeteer-core` 필요, 저장소에 넣지 않음).
+두 저장소의 그림이 같아야 하므로 아이콘을 바꾸면 양쪽 모두 다시 만든다.
+
 ### DB
 `verb_repository.dart`, 지금 **version 5**. 표: verbs, reviews(복습 기록), favorites, settings(퀴즈 설정 JSON).
 스키마를 바꿀 때는 버전을 올리고 `onUpgrade`에 단계별 마이그레이션을 추가한다. **복습 기록은 절대 지우지 않는다.**
@@ -110,4 +114,4 @@ web/             웹 진입점. sqlite3.wasm·sqflite_sw.js는 `dart run sqflite
 
 - 6단계(경어) 동사 데이터 추가
 - `jlpt_verified`가 false인 급수 표시
-- 웹 앱 아이콘 교체, 다크 모드 점검
+- 다크 모드 점검
