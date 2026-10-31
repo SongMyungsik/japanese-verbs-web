@@ -28,7 +28,7 @@ lib/models/      verb.dart(동사·활용형), study_scope.dart(단계·주제·
 lib/providers/   verb_provider(목록·필터·즐겨찾기·진도), quiz_settings(퀴즈 설정, DB 저장),
                  quiz_controller(퀴즈 한 판), app_nav(탭)
 lib/services/    conjugator(활용 규칙 엔진), quiz_generator, verb_repository(SQLite), speech_service(TTS),
-                 db_platform(플랫폼별 DB 구현 선택: _native, _web)
+                 db_platform(플랫폼별 DB 구현 선택: _native, _web), web_speech(웹 음성)
 lib/widgets/     furigana.dart(한자 위 읽기), common.dart(그룹 색, 읽기 토글, 읽어 주기 버튼)
 assets/data/     verbs.json, expected_forms.json, examples.json, verb_pairs.json
 assets/fonts/    NotoSansJP-subset.ttf (앱에서 쓰는 글자만 남긴 고딕 글꼴), OFL.txt
@@ -93,7 +93,8 @@ web/             웹 진입점. sqlite3.wasm·sqflite_sw.js는 `dart run sqflite
   두 글자 정도인 쪽을 고른다(昨日の=きのう|の 문제 때문). `tool/check_examples.py`의 `split_ruby`가 같은 방식 —
   한쪽을 고치면 다른 쪽도 고친다.
 - **읽어 주기**는 히라가나 읽기를 TTS에 넘긴다(한자는 엔진이 잘못 읽을 수 있어서). 기기에 일본어 음성이 없으면 안내 스낵바.
-  웹은 속도 기준이 달라(1.0이 보통) 0.9를 쓰고, 음성 목록이 늦게 채워져 `_initWeb`에서 기다렸다가 고른다.
+  웹은 flutter_tts 대신 `web_speech_web.dart`로 브라우저 음성을 직접 쓴다. 플러그인은 언어를 비워 둘 수 있어
+  페이지 언어(ko)로 읽혔기 때문이다. `lang`은 반드시 ja-JP로 준다.
 - **웹 저장소**: DB는 브라우저 IndexedDB에 있다(`sqflite_databases`). 기기 간 공유되지 않는다.
   패키지를 올린 뒤에는 setup을 다시 돌려 web/의 두 파일을 맞춘다. 앱 안에서 쓰는 경로는 `--base-href`에 맞아야 한다.
 - `flutter analyze`의 info 1건(`db_platform_native.dart`의 sqflite import가 불필요하다는 메시지)은 **일부러 둔 것**.
