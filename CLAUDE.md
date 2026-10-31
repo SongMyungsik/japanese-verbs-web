@@ -40,7 +40,7 @@ web/             웹 진입점. sqlite3.wasm·sqflite_sw.js는 `dart run sqflite
 
 ## 데이터
 
-- **verbs.json** — 사용자가 엑셀에서 관리해 내보내는 원본. 필드: id, text, reading, meaning,
+- **verbs.json** — 동사 데이터의 **원본**. 엑셀에서 내보내지 않고 이 파일을 직접 고친다. 필드: id, text, reading, meaning,
   group(ichidan/godan/irregular), ending, stative("TRUE"/"FALSE" 문자열), topics(`|`로 여러 개),
   learning_stage(1~6), jlpt_level(N5~N1/미분류), jlpt_verified. 참/거짓이 문자열로 올 수 있어
   `Verb._bool`이 둘 다 받는다. 6단계(경어)는 아직 동사가 없어 메뉴에 '준비 중'.
