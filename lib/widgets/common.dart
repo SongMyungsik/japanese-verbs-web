@@ -37,6 +37,99 @@ GroupColors groupColors(BuildContext context, VerbGroup g) {
   };
 }
 
+/// 메뉴·설명 박스의 파스텔 색 (라이트 배경·글자 / 다크 배경·글자)
+enum Pastel {
+  pink(
+    Color(0xFFFFE1EA),
+    Color(0xFF6B2340),
+    Color(0xFF4A2433),
+    Color(0xFFFFD9E6),
+  ),
+  peach(
+    Color(0xFFFFE8D6),
+    Color(0xFF6B3A14),
+    Color(0xFF4A3222),
+    Color(0xFFFFE2CC),
+  ),
+  mint(
+    Color(0xFFD9F5E6),
+    Color(0xFF1C5238),
+    Color(0xFF1F3F30),
+    Color(0xFFCFF2DF),
+  ),
+  sky(
+    Color(0xFFDCEEFF),
+    Color(0xFF1B4469),
+    Color(0xFF1F3449),
+    Color(0xFFD4E9FF),
+  ),
+  lavender(
+    Color(0xFFEAE2FF),
+    Color(0xFF3F2A75),
+    Color(0xFF332A4D),
+    Color(0xFFE4DAFF),
+  ),
+  lemon(
+    Color(0xFFFFF5CC),
+    Color(0xFF5E4A00),
+    Color(0xFF453C1C),
+    Color(0xFFFFF0B8),
+  );
+
+  const Pastel(this.lightBg, this.lightFg, this.darkBg, this.darkFg);
+  final Color lightBg, lightFg, darkBg, darkFg;
+
+  Color background(bool dark) => dark ? darkBg : lightBg;
+  Color foreground(bool dark) => dark ? darkFg : lightFg;
+}
+
+/// 제목이 있는 파스텔 색 상자. 안의 아이콘은 제목과 같은 색으로 그린다.
+class PastelSection extends StatelessWidget {
+  const PastelSection({
+    super.key,
+    required this.color,
+    required this.title,
+    required this.child,
+  });
+
+  final Pastel color;
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    final fg = color.foreground(dark);
+    return Card(
+      color: color.background(dark),
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: fg,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            IconTheme.merge(
+              data: IconThemeData(color: fg),
+              child: child,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// 앱바에 넣는 '읽기 보이기/숨기기' 버튼
 class ReadingToggleButton extends StatelessWidget {
   const ReadingToggleButton({super.key});

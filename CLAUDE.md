@@ -29,7 +29,7 @@ lib/providers/   verb_provider(목록·필터·즐겨찾기·진도), quiz_setti
                  quiz_controller(퀴즈 한 판), app_nav(탭)
 lib/services/    conjugator(활용 규칙 엔진), quiz_generator, verb_repository(SQLite), speech_service(TTS),
                  db_platform(플랫폼별 DB 구현 선택: _native, _web), web_speech(웹 음성)
-lib/widgets/     furigana.dart(한자 위 읽기), common.dart(그룹 색, 읽기 토글, 읽어 주기 버튼)
+lib/widgets/     furigana.dart(한자 위 읽기), common.dart(그룹 색, 파스텔 색·상자, 읽기 토글, 읽어 주기 버튼)
 assets/data/     verbs.json, expected_forms.json, examples.json, verb_pairs.json
 assets/fonts/    NotoSansJP-subset.ttf (앱에서 쓰는 글자만 남긴 고딕 글꼴), OFL.txt
 tool/            데이터 검증·생성 스크립트 (아래 참고)

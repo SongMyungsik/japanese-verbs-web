@@ -8,6 +8,16 @@ import '../providers/quiz_settings.dart';
 import '../providers/verb_provider.dart';
 import '../widgets/common.dart';
 
+/// 기본 선택 색은 파스텔 상자 위에서 묻혀서, 고른 칸이 보이도록 진하게 칠한다.
+ButtonStyle _segmentStyle(BuildContext context) {
+  final scheme = Theme.of(context).colorScheme;
+  return SegmentedButton.styleFrom(
+    backgroundColor: scheme.surface,
+    selectedBackgroundColor: scheme.primary,
+    selectedForegroundColor: scheme.onPrimary,
+  );
+}
+
 /// 퀴즈 범위(동사 그룹·활용형·문제 수)를 정하는 화면
 class QuizSetupScreen extends StatefulWidget {
   const QuizSetupScreen({super.key});
@@ -27,80 +37,92 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final s = context.watch<QuizSettings>();
     return Scaffold(
       appBar: AppBar(title: const Text('퀴즈 설정')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('문제 방식', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
-          SegmentedButton<QuizMode>(
-            segments: [
-              for (final m in QuizMode.values)
-                ButtonSegment(value: m, label: Text(m.label)),
-            ],
-            selected: {s.mode},
-            onSelectionChanged: (v) => s.setMode(v.first),
+          PastelSection(
+            color: Pastel.lavender,
+            title: '문제 방식',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SegmentedButton<QuizMode>(
+                  style: _segmentStyle(context),
+                  segments: [
+                    for (final m in QuizMode.values)
+                      ButtonSegment(value: m, label: Text(m.label)),
+                  ],
+                  selected: {s.mode},
+                  onSelectionChanged: (v) => s.setMode(v.first),
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('정답 자동 읽어 주기'),
+                  subtitle: const Text('답을 고르면 정답을 일본어로 읽어 줍니다'),
+                  value: s.autoSpeak,
+                  onChanged: s.setAutoSpeak,
+                ),
+              ],
+            ),
           ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('정답 자동 읽어 주기'),
-            subtitle: const Text('답을 고르면 정답을 일본어로 읽어 줍니다'),
-            value: s.autoSpeak,
-            onChanged: s.setAutoSpeak,
+          const PastelSection(
+            color: Pastel.sky,
+            title: '학습 범위',
+            child: _ScopePicker(),
           ),
-          const SizedBox(height: 24),
-          Text('학습 범위', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
-          const _ScopePicker(),
-          const SizedBox(height: 24),
-          Text('동사 그룹', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              ChoiceChip(
-                label: const Text('전체'),
-                selected: s.group == null,
-                onSelected: (_) => s.setGroup(null),
-              ),
-              for (final g in VerbGroup.values)
+          PastelSection(
+            color: Pastel.mint,
+            title: '동사 그룹',
+            child: Wrap(
+              spacing: 8,
+              children: [
                 ChoiceChip(
-                  label: Text(groupLabel(g)),
-                  selected: s.group == g,
-                  onSelected: (_) => s.setGroup(g),
+                  label: const Text('전체'),
+                  selected: s.group == null,
+                  onSelected: (_) => s.setGroup(null),
                 ),
-            ],
+                for (final g in VerbGroup.values)
+                  ChoiceChip(
+                    label: Text(groupLabel(g)),
+                    selected: s.group == g,
+                    onSelected: (_) => s.setGroup(g),
+                  ),
+              ],
+            ),
           ),
-          const SizedBox(height: 24),
-          Text('묻고 싶은 활용형', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              for (final f in FormType.values)
-                FilterChip(
-                  label: Text(f.label),
-                  selected: s.forms.contains(f),
-                  onSelected: (on) => s.toggleForm(f, on),
-                ),
-            ],
+          PastelSection(
+            color: Pastel.peach,
+            title: '묻고 싶은 활용형',
+            child: Wrap(
+              spacing: 8,
+              children: [
+                for (final f in FormType.values)
+                  FilterChip(
+                    label: Text(f.label),
+                    selected: s.forms.contains(f),
+                    onSelected: (on) => s.toggleForm(f, on),
+                  ),
+              ],
+            ),
           ),
-          const SizedBox(height: 24),
-          Text('문제 수', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
-          SegmentedButton<int>(
-            segments: const [
-              ButtonSegment(value: 10, label: Text('10')),
-              ButtonSegment(value: 20, label: Text('20')),
-              ButtonSegment(value: 30, label: Text('30')),
-            ],
-            selected: {s.count},
-            onSelectionChanged: (v) => s.setCount(v.first),
+          PastelSection(
+            color: Pastel.lemon,
+            title: '문제 수',
+            child: SegmentedButton<int>(
+              style: _segmentStyle(context),
+              segments: const [
+                ButtonSegment(value: 10, label: Text('10')),
+                ButtonSegment(value: 20, label: Text('20')),
+                ButtonSegment(value: 30, label: Text('30')),
+              ],
+              selected: {s.count},
+              onSelectionChanged: (v) => s.setCount(v.first),
+            ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
           FilledButton.icon(
             icon: const Icon(Icons.play_arrow),
             label: const Text('시작하기'),
@@ -174,6 +196,7 @@ class _ScopePickerState extends State<_ScopePicker> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SegmentedButton<_Range>(
+          style: _segmentStyle(context),
           showSelectedIcon: false,
           segments: const [
             ButtonSegment(value: _Range.all, label: Text('전체')),

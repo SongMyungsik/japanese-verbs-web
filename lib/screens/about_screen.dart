@@ -82,7 +82,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
 
-          _Section(
+          PastelSection(
+            color: Pastel.sky,
             title: '이렇게 사용하세요',
             child: const Column(
               children: [
@@ -144,7 +145,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
 
-          _Section(
+          PastelSection(
+            color: Pastel.mint,
             title: '동사 그룹과 색',
             child: const Column(
               children: [
@@ -169,7 +171,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
 
-          _Section(
+          PastelSection(
+            color: Pastel.peach,
             title: '활용형 ${FormType.values.length}가지 (書く의 경우)',
             child: Column(
               children: [
@@ -202,7 +205,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
 
-          const _Section(
+          const PastelSection(
+            color: Pastel.lavender,
             title: '복습은 이렇게 동작합니다',
             child: Column(
               children: [
@@ -219,7 +223,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
 
-          const _Section(
+          const PastelSection(
+            color: Pastel.lemon,
             title: '알아 두세요',
             child: Column(
               children: [
@@ -240,7 +245,8 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
 
-          const _Section(
+          const PastelSection(
+            color: Pastel.pink,
             title: '개인정보 처리방침',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,36 +268,6 @@ class AboutScreen extends StatelessWidget {
   }
 }
 
-class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            child,
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _Step extends StatelessWidget {
   const _Step({required this.icon, required this.title, required this.text});
 
@@ -307,7 +283,7 @@ class _Step extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 22, color: theme.colorScheme.primary),
+          Icon(icon, size: 22),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

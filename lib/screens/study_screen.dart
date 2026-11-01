@@ -6,6 +6,7 @@ import '../providers/app_nav.dart';
 import '../providers/quiz_settings.dart';
 import '../providers/verb_provider.dart';
 import '../services/verb_repository.dart';
+import '../widgets/common.dart';
 import 'quiz_setup_screen.dart';
 import 'review_screen.dart';
 import 'verb_list_screen.dart';
@@ -84,13 +85,13 @@ class _StudyMenuScreenState extends State<StudyMenuScreen> {
         ),
         children: [
           _MenuTile(
-            color: _Pastel.pink,
+            color: Pastel.pink,
             title: '동사 목록',
             subtitle: '전체 동사 $total개\n익숙함 $mastered · 즐겨찾기 $favorites',
             onTap: () => _push(const VerbListScreen()),
           ),
           _MenuTile(
-            color: _Pastel.peach,
+            color: Pastel.peach,
             title: '단계별 학습',
             subtitle: '생활 필수 동사부터\n경어·고급 표현까지',
             onTap: () => _push(
@@ -98,7 +99,7 @@ class _StudyMenuScreenState extends State<StudyMenuScreen> {
             ),
           ),
           _MenuTile(
-            color: _Pastel.mint,
+            color: Pastel.mint,
             title: '주제별 학습',
             subtitle: '일상생활 · 이동/여행\n학습/감정 · 직장/사회',
             onTap: () => _push(
@@ -106,7 +107,7 @@ class _StudyMenuScreenState extends State<StudyMenuScreen> {
             ),
           ),
           _MenuTile(
-            color: _Pastel.sky,
+            color: Pastel.sky,
             title: 'JLPT 학습',
             subtitle: 'N5 ~ N1\n급수별 동사',
             onTap: () => _push(
@@ -114,14 +115,14 @@ class _StudyMenuScreenState extends State<StudyMenuScreen> {
             ),
           ),
           _MenuTile(
-            color: _Pastel.lavender,
+            color: Pastel.lavender,
             title: '퀴즈',
             subtitle: '활용형 퀴즈\n복습/오답 노트',
             // 퀴즈는 하단 '퀴즈' 탭에 있으므로 그 탭으로 옮긴다.
             onTap: () => context.read<AppNav>().go(AppNav.quiz),
           ),
           _MenuTile(
-            color: _Pastel.lemon,
+            color: Pastel.lemon,
             title: '오늘의 복습',
             subtitle: _due > 0 ? '복습할 항목\n$_due개' : '지금 복습할\n항목이 없습니다',
             badge: _due > 0 ? '$_due' : null,
@@ -131,52 +132,6 @@ class _StudyMenuScreenState extends State<StudyMenuScreen> {
       ),
     );
   }
-}
-
-/// 학습 선택 타일의 파스텔 색 (라이트 배경·글자 / 다크 배경·글자)
-enum _Pastel {
-  pink(
-    Color(0xFFFFE1EA),
-    Color(0xFF6B2340),
-    Color(0xFF4A2433),
-    Color(0xFFFFD9E6),
-  ),
-  peach(
-    Color(0xFFFFE8D6),
-    Color(0xFF6B3A14),
-    Color(0xFF4A3222),
-    Color(0xFFFFE2CC),
-  ),
-  mint(
-    Color(0xFFD9F5E6),
-    Color(0xFF1C5238),
-    Color(0xFF1F3F30),
-    Color(0xFFCFF2DF),
-  ),
-  sky(
-    Color(0xFFDCEEFF),
-    Color(0xFF1B4469),
-    Color(0xFF1F3449),
-    Color(0xFFD4E9FF),
-  ),
-  lavender(
-    Color(0xFFEAE2FF),
-    Color(0xFF3F2A75),
-    Color(0xFF332A4D),
-    Color(0xFFE4DAFF),
-  ),
-  lemon(
-    Color(0xFFFFF5CC),
-    Color(0xFF5E4A00),
-    Color(0xFF453C1C),
-    Color(0xFFFFF0B8),
-  );
-
-  const _Pastel(this.lightBg, this.lightFg, this.darkBg, this.darkFg);
-  final Color lightBg, lightFg, darkBg, darkFg;
-
-  Color background(bool dark) => dark ? darkBg : lightBg;
-  Color foreground(bool dark) => dark ? darkFg : lightFg;
 }
 
 /// 학습 선택 화면의 타일: 제목 · 설명
@@ -189,7 +144,7 @@ class _MenuTile extends StatelessWidget {
     this.badge,
   });
 
-  final _Pastel color;
+  final Pastel color;
   final String title;
   final String subtitle;
   final String? badge;
@@ -270,17 +225,21 @@ class ScopeMenuScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          for (final s in scopes)
+          for (final (i, s) in scopes.indexed)
             Builder(
               builder: (context) {
                 final n = p.countIn(s);
+                final color = Pastel.values[i % Pastel.values.length];
                 return _MenuCard(
+                  color: color,
                   title: s.title,
                   subtitle: [
                     if (s.description.isNotEmpty) s.description,
                     n > 0 ? '동사 $n개' : '준비 중',
                   ].join('\n'),
-                  footer: n == 0 ? null : _ProgressBar(p.progressIn(s.matches)),
+                  footer: n == 0
+                      ? null
+                      : _ProgressBar(p.progressIn(s.matches), color: color),
                   onTap: n == 0
                       ? null
                       : () => Navigator.of(context).push(
@@ -311,6 +270,7 @@ class QuizMenuScreen extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         children: [
           _MenuCard(
+            color: Pastel.lavender,
             icon: Icons.tune,
             title: '퀴즈 설정',
             subtitle: '동사 그룹 · 활용형 · 문제 수 정하기',
@@ -319,6 +279,7 @@ class QuizMenuScreen extends StatelessWidget {
             ).push(MaterialPageRoute(builder: (_) => const QuizSetupScreen())),
           ),
           _MenuCard(
+            color: Pastel.mint,
             icon: Icons.play_arrow,
             title: '퀴즈 시작',
             subtitle: forms.isEmpty
@@ -327,6 +288,7 @@ class QuizMenuScreen extends StatelessWidget {
             onTap: forms.isEmpty ? null : () => s.start(context),
           ),
           _MenuCard(
+            color: Pastel.peach,
             icon: Icons.fact_check_outlined,
             title: '복습 / 오답 노트',
             subtitle: '푼 기록을 바탕으로 다시 풀기',
@@ -342,6 +304,7 @@ class QuizMenuScreen extends StatelessWidget {
 
 class _MenuCard extends StatelessWidget {
   const _MenuCard({
+    required this.color,
     required this.title,
     required this.subtitle,
     required this.onTap,
@@ -349,6 +312,7 @@ class _MenuCard extends StatelessWidget {
     this.footer,
   });
 
+  final Pastel color;
   final IconData? icon;
   final String title;
   final String subtitle;
@@ -357,20 +321,31 @@ class _MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final bg = color.background(dark);
+    final fg = color.foreground(dark);
     return Card(
+      color: bg,
+      elevation: 0,
       margin: const EdgeInsets.only(bottom: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      clipBehavior: Clip.antiAlias, // 누를 때 물결이 둥근 모서리 밖으로 나가지 않게
       child: ListTile(
         enabled: onTap != null,
+        textColor: fg,
+        iconColor: fg,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: icon == null
             ? null
             : CircleAvatar(
-                backgroundColor: scheme.primaryContainer,
-                foregroundColor: scheme.onPrimaryContainer,
+                backgroundColor: fg,
+                foregroundColor: bg,
                 child: Icon(icon),
               ),
-        title: Text(title),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: footer == null
             ? Text(subtitle)
             : Column(
@@ -386,13 +361,14 @@ class _MenuCard extends StatelessWidget {
 
 /// 학습 진도 막대: 진한 부분 = 익숙한 동사, 옅은 부분 = 풀어 본 동사
 class _ProgressBar extends StatelessWidget {
-  const _ProgressBar(this.progress);
+  const _ProgressBar(this.progress, {required this.color});
   final ScopeProgress progress;
+  final Pastel color;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
+    final fg = color.foreground(theme.brightness == Brightness.dark);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -405,13 +381,13 @@ class _ProgressBar extends StatelessWidget {
               children: [
                 LinearProgressIndicator(
                   value: progress.solvedRatio,
-                  backgroundColor: scheme.surfaceContainerHighest,
-                  color: scheme.primary.withValues(alpha: 0.3),
+                  backgroundColor: fg.withValues(alpha: 0.12),
+                  color: fg.withValues(alpha: 0.35),
                 ),
                 LinearProgressIndicator(
                   value: progress.masteredRatio,
                   backgroundColor: Colors.transparent,
-                  color: scheme.primary,
+                  color: fg,
                 ),
               ],
             ),
@@ -420,7 +396,7 @@ class _ProgressBar extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           '익숙함 ${progress.mastered} · 풀어 봄 ${progress.solved} / ${progress.total}',
-          style: theme.textTheme.bodySmall,
+          style: theme.textTheme.bodySmall?.copyWith(color: fg),
         ),
       ],
     );

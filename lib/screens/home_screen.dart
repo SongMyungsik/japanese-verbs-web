@@ -7,6 +7,11 @@ import '../providers/verb_provider.dart';
 import '../services/verb_repository.dart';
 import 'review_screen.dart';
 
+// 홈은 다른 화면과 달리 진한 그라데이션 바탕이라 밝은 글자를 쓴다.
+const _gradient = [Color(0xFF312E81), Color(0xFF5B3FA8), Color(0xFF9A4A9E)];
+const _highlight = Color(0xFFFFF0B8); // 제목·숫자·시작 버튼
+const _onHighlight = Color(0xFF3F2A75);
+
 /// 홈 탭: 앱 소개(스플래시) 화면. 동사 수, 활용형 수, 복습 대기 수를 보여 준다.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,11 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final total = context.watch<VerbProvider>().totalCount;
     final nav = context.read<AppNav>();
 
     return Scaffold(
+      extendBody: true, // 버전 표시 뒤까지 그라데이션이 이어지게
       // 하단 내비게이션 바로 위에 버전 표시
       bottomNavigationBar: SizedBox(
         width: double.infinity,
@@ -56,19 +61,17 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Text(
             'Japanese verbs ver. 1.0',
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: scheme.onSurfaceVariant,
-            ),
+            style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
           ),
         ),
       ),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [scheme.primaryContainer, scheme.surface],
+            colors: _gradient,
           ),
         ),
         child: SafeArea(
@@ -85,23 +88,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       textAlign: TextAlign.center,
                       style: theme.textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: scheme.onPrimaryContainer,
+                        color: _highlight,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'どうしかつよう',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: scheme.onPrimaryContainer,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text('일본어 동사 활용', style: theme.textTheme.headlineSmall),
+                    Text(
+                      '일본어 동사 활용',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Text(
                       '1단·5단·불규칙 동사를 활용형별로 익히고\n퀴즈와 복습으로 기억하세요.',
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Row(
@@ -124,6 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: _highlight,
+                          foregroundColor: _onHighlight,
+                        ),
                         onPressed: () => nav.go(AppNav.study),
                         icon: const Icon(Icons.school),
                         label: const Text('학습 시작'),
@@ -147,6 +161,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     // 홈에는 하단 내비게이션이 없으므로 앱 소개로 가는 링크를 둔다.
                     const SizedBox(height: 4),
                     TextButton.icon(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                      ),
                       onPressed: () => nav.go(AppNav.about),
                       icon: const Icon(Icons.info_outline, size: 18),
                       label: const Text('앱 소개'),
@@ -176,9 +193,13 @@ class _Stat extends StatelessWidget {
           value,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
+            color: _highlight,
           ),
         ),
-        Text(label, style: theme.textTheme.bodySmall),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white),
+        ),
       ],
     );
   }
